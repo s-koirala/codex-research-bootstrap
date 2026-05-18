@@ -46,8 +46,12 @@ Codex CLI itself and the declared MCP servers.
 - Audit-round logs are gitignored (`logs/`, `audit_trail_*.md`,
   `audit_round_*.md`) so they remain local-only and do not ship with the
   public clone.
-- Git authorship metadata for this repository must use a placeholder
-  identity, not the maintainer's global git configuration.
+- Git authorship metadata: commits attribute to the maintainer's public
+  GitHub identity (set via `git config --local`). The in-content
+  de-identification commitment is enforced separately by
+  `tools/check_identity.py` (pre-commit hook + standalone scanner), which
+  continues to gate real names, pseudonyms, personal emails, OS
+  usernames, and workstation paths inside committed files.
 
 ## Alternatives considered
 
