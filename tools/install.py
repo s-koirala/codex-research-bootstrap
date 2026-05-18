@@ -49,6 +49,10 @@ _INSTALL_EXCLUDE_DIRS = frozenset({
     ".ipynb_checkpoints",
 })
 _INSTALL_EXCLUDE_SUFFIXES = frozenset({".pyc", ".pyo"})
+# `.gitkeep` exists only to make empty directories committable; it has no
+# runtime purpose in the install target and would inflate the manifest's
+# `files` count past the doc's documented inventory totals.
+_INSTALL_EXCLUDE_FILENAMES = frozenset({".gitkeep"})
 
 # (source-relative-to-repo, target-relative-to-CODEX_HOME).
 # Sources that do not yet exist are tolerated (Phases B-E populate them).
@@ -194,6 +198,8 @@ def _is_excluded(path: Path) -> bool:
     """True if path is dev-time noise (bytecode caches, lint caches) that
     must not propagate from the bootstrap source tree to the install target."""
     if path.suffix in _INSTALL_EXCLUDE_SUFFIXES:
+        return True
+    if path.name in _INSTALL_EXCLUDE_FILENAMES:
         return True
     return any(part in _INSTALL_EXCLUDE_DIRS for part in path.parts)
 
