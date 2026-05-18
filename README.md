@@ -55,6 +55,11 @@ written. Append `--dry-run` to preview the actions without writing anything.
 The installer does **not** touch `~/.codex/AGENTS.md`. Configuring that file
 is a separate, opt-in step — see the next section.
 
+[INSTALL.md](INSTALL.md) carries the full procedure: the AI-assisted install
+prompt (Codex-CLI-specific, 3-stage install + verify + audit), filesystem
+verification snippets, the deployed inventory (skills / agents / hooks /
+templates), and bundled MCP-server notes.
+
 ## Configuring AGENTS.md
 
 The bootstrap ships a sample user AGENTS.md at
