@@ -1,0 +1,77 @@
+{
+  "$schema_note": "Codex CLI hook event wiring for codex-research-bootstrap. Paths use ${CODEX_HOME:-${HOME}/.codex} as the bootstrap-install target. tools/install.py copies hooks/*.py into ${CODEX_HOME}/hooks/ at install time; this file is then merged into ${CODEX_HOME}/hooks.json (or kept project-scope at .codex/hooks.json when the project is trusted). Per https://developers.openai.com/codex/hooks: events are SessionStart, PreToolUse, PermissionRequest, PostToolUse, UserPromptSubmit, Stop. There is no SessionEnd; the Stop-aggregation pattern (see AGENTS.md 'Stop-event audit-trail aggregation') substitutes.",
+  "$reference": ".codex/config.toml (companion TOML); AGENTS.md sections 'Stop-event audit-trail aggregation' and 'ReproLog'.",
+  "$hooks_in_repo": [
+    "hooks/session_start_provenance.py - SessionStart - provenance emission + closed-session aggregation",
+    "hooks/stop_audit_aggregator.py    - Stop         - append one per-turn JSON record under logs/",
+    "hooks/pre_bash_safety.py          - PreToolUse:Bash - block irreversible shell ops not caught by config.toml deny list",
+    "hooks/pre_write_seed_guard.py     - PreToolUse:Write|Edit|MultiEdit|NotebookEdit - flag missing/unseeded RNG",
+    "hooks/pre_write_phi_guard.py      - PreToolUse:Write|Edit|MultiEdit|NotebookEdit - flag PHI patterns in epi cwds",
+    "hooks/post_write_notebook_clean.py - PostToolUse:Write|Edit|NotebookEdit - run nbstripout on changed notebooks"
+  ],
+  "$pre_commit_hooks_not_wired_here": [
+    "hooks/precommit_seed_guard.py     - pre-commit framework, wired in .pre-commit-config.yaml",
+    "hooks/precommit_citation_cff.py   - pre-commit framework, wired in .pre-commit-config.yaml"
+  ],
+  "SessionStart": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python ${CODEX_HOME:-${HOME}/.codex}/hooks/session_start_provenance.py",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python ${CODEX_HOME:-${HOME}/.codex}/hooks/pre_write_seed_guard.py",
+          "timeout": 15
+        },
+        {
+          "type": "command",
+          "command": "python ${CODEX_HOME:-${HOME}/.codex}/hooks/pre_write_phi_guard.py",
+          "timeout": 15
+        }
+      ]
+    },
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python ${CODEX_HOME:-${HOME}/.codex}/hooks/pre_bash_safety.py",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Write|Edit|NotebookEdit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python ${CODEX_HOME:-${HOME}/.codex}/hooks/post_write_notebook_clean.py",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python ${CODEX_HOME:-${HOME}/.codex}/hooks/stop_audit_aggregator.py",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}

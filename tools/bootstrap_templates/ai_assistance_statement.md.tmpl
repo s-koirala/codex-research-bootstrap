@@ -1,0 +1,53 @@
+# AI-Assistance Statement
+
+This statement satisfies the disclosure requirements of
+[ICMJE Recommendations (updated January 2026)](https://www.icmje.org/recommendations/)
+section II.A.4 (acknowledgment of AI tools).
+
+## Models used
+
+| Model | Version | Role |
+|---|---|---|
+| <<MODEL_ID>> | <<MODEL_VERSION>> | <<ROLE>> |
+
+Role enum: `idea` (idea generation), `code` (implementation), `prose`
+(writing assistance), `audit` (critique / review), `multi` (combination of
+the above).
+
+## Authorship and accountability
+
+Per ICMJE, AI tools cannot be listed as authors. The human author bears full
+responsibility for:
+
+- Verification of every factual claim against primary sources (peer-reviewed
+  literature, official documentation, professional standards) per the
+  project's evidence hierarchy in `AGENTS.md`.
+- Correctness of every statistical method and parameter choice.
+- Identity hygiene for any pseudonymous author (no real-name metadata in
+  committed files).
+
+## Reproducibility log
+
+All AI-assisted artifacts (figures, tables, analyses) carry a `Repro-Log-Path:`
+trailer in their commit message pointing to the corresponding
+`logs/reproducibility/repro_log_*.json` record. Each ReproLog captures:
+
+- git HEAD at artifact generation
+- `pip_freeze_sha256` (64-hex of the full venv freeze)
+- Dataset checksums from `data/_manifest.json`
+- RNG seed (if applicable)
+- Model commit hash (if a fitted model was emitted)
+
+Replay: check out the recorded git HEAD, restore the venv from
+`logs/reproducibility/env/<sha>.txt`, restore the dataset by SHA matching
+the manifest entries, and re-run.
+
+## Verification
+
+<<TODO: list verification steps taken — e.g. literature-check agent runs,
+quant-auditor findings, manual statistical-method cross-checks against
+primary sources.>>
+
+## Date
+
+This statement reflects AI-assistance at the time of: <<DATE>>.

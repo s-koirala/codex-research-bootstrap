@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/<<GITHUB_HANDLE>>/<<REPO>>/templates/data_manifest_schema.json",
+  "title": "DataManifest",
+  "description": "Per-file provenance + integrity manifest for files under data/. Keyed by POSIX-relative path. Consumed by validate-data skill (Section 1 Provenance) and by emit-repro-log to populate ReproLog dataset_checksums field.",
+  "type": "object",
+  "properties": {
+    "$generator": {
+      "type": "string",
+      "description": "Identifier of the script that wrote this manifest, e.g. tools/build_data_manifest.py@<version>"
+    },
+    "$generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of last full rebuild"
+    },
+    "$git_head": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{40}|unknown)$",
+      "description": "Project git HEAD at generation time"
+    },
+    "files": {
+      "type": "object",
+      "description": "Map: POSIX-relative-path -> FileEntry",
+      "additionalProperties": {"$ref": "#/$defs/FileEntry"}
+    }
+  },
+  "required": ["$generator", "$generated_at", "$git_head", "files"],
+  "additionalProperties": false,
+  "$defs": {
+    "FileEntry": {
+      "type": "object",
+      "required": ["sha256", "size_bytes", "retrieval_timestamp", "retriever_script", "retriever_git_head"],
+      "additionalProperties": false,
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Full 64-hex SHA-256 of the file's bytes"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retrieval_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC when this entry's SHA was first computed (preserved across rebuilds unless content changes)"
+        },
+        "retriever_script": {
+          "type": "string",
+          "description": "Project-relative POSIX path to the script that pulled this file; 'manual' if not retrieved by an automated script"
+        },
+        "retriever_git_head": {
+          "type": "string",
+          "pattern": "^([0-9a-f]{40}|unknown|manual)$",
+          "description": "Git HEAD of retriever_script at retrieval time"
+        },
+        "source_uri": {
+          "type": ["string", "null"],
+          "description": "Canonical source URL/URI for this file (user-supplied; preserved across rebuilds). Required for files in data/external/ and data/raw/; optional elsewhere."
+        },
+        "license": {
+          "type": ["string", "null"],
+          "description": "SPDX identifier (e.g., CC-BY-4.0) or free-text license note. User-supplied; preserved across rebuilds."
+        },
+        "snapshot_date": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "ISO calendar date of the data snapshot (vendor-side date, not retrieval date). User-supplied; preserved across rebuilds."
+        },
+        "notes": {
+          "type": ["string", "null"],
+          "description": "Free-text user notes; preserved across rebuilds."
+        }
+      }
+    }
+  }
+}

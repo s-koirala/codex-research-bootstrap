@@ -1,0 +1,40 @@
+# =====================================================================
+# Text/binary classification + nbstripout filter for Jupyter notebooks
+# =====================================================================
+
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Force LF for these (cross-platform tooling)
+*.py text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.sh text eol=lf
+*.cfg text eol=lf
+
+# Notebook stripping via nbstripout (pre-commit hook runs on save)
+*.ipynb filter=nbstripout
+*.ipynb diff=ipynb
+
+# Binary types
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.parquet binary
+*.feather binary
+*.h5 binary
+*.hdf5 binary
+*.npy binary
+*.npz binary
+*.pt binary
+*.onnx binary
+*.joblib binary
+*.pkl binary
+*.xlsx binary
+*.docx binary
+*.pptx binary

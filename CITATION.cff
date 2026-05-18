@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this bootstrap layer in your research workflow, please cite it."
+title: "codex-research-bootstrap: Codex CLI customization for research workflows"
+type: software
+version: 0.0.1
+date-released: "2026-05-18"
+keywords:
+  - codex-cli
+  - openai-codex
+  - research-workflow
+  - reproducibility
+  - statistics
+  - population-health
+  - epidemiology
+  - manuscript-preparation
+  - audit-remediate-loop
+authors:
+  - name: "codex-research-bootstrap maintainers"
+license: MIT

@@ -1,0 +1,109 @@
+---
+title: <<NAME>> — Study Protocol v0
+date: <<DATE>>
+type: protocol
+status: draft
+reporting_standard: <<REPORTING_STANDARD>>  # STROBE | CONSORT | STARD | TRIPOD | PRISMA
+---
+
+# Study Protocol — <<NAME>>
+
+## 1. Title and abstract
+<<TODO: 1-paragraph abstract per reporting-standard item 1>>
+
+## 2. Background and rationale
+<<TODO: context; prior work; the gap this study addresses>>
+
+## 3. Objectives
+<<TODO: primary + secondary objectives; specify estimand>>
+
+## 4. Study design
+<<TODO: design type (cohort, case-control, RCT, etc.); justify>>
+
+## 5. Setting
+<<TODO: locations, dates, follow-up>>
+
+## 6. Participants
+
+### Eligibility criteria
+<<TODO: inclusion/exclusion>>
+
+### Sources of recruitment
+<<TODO: how participants were identified>>
+
+## 7. Variables
+
+### Outcomes
+<<TODO: primary + secondary; measurement methods; units>>
+
+### Exposures
+<<TODO: definition; how measured; reference category>>
+
+### Confounders
+<<TODO: pre-specified adjustment set; cite the DAG below>>
+
+### Effect modifiers
+<<TODO: interactions to examine; pre-specified>>
+
+## 8. Data sources / measurement
+<<TODO: instruments; assessor blinding; quality control>>
+
+## 9. Bias (efforts to address)
+<<TODO: selection bias, measurement bias, confounding, missing-data
+strategy>>
+
+## 10. Study size
+<<TODO: target n; rationale via power-analysis; minimum-detectable effect>>
+
+## 11. Quantitative variables
+<<TODO: handling of continuous vars; categorization rationale (avoid magic
+cutoffs)>>
+
+## 12. Statistical methods
+
+### Primary analysis
+<<TODO: model; pre-specified covariates; HAC SE if time-series>>
+
+### Subgroup analyses
+<<TODO: pre-specified subgroups>>
+
+### Sensitivity analyses
+<<TODO: E-value (VanderWeele & Ding 2017); multiple-imputation if MAR>>
+
+### Multiple testing
+<<TODO: family-wise correction; BH-FDR or Hansen SPA; cite>>
+
+## 13. DAG (causal model)
+
+```
+<<TODO: dagitty syntax via /agent dag-drafter — or manual>>
+dag {
+  Exposure -> Outcome
+  Confounder -> Exposure
+  Confounder -> Outcome
+}
+```
+
+Adjustment set (back-door criterion): <<TODO>>
+
+## 14. Pre-registration
+
+This protocol is pre-registered. Freeze:
+- File SHA-256: <<TODO: filled by /preregister>>
+- Date frozen: <<TODO>>
+- External registry (if any): OSF DOI <<TODO>>
+
+## 15. Ethics / compliance
+
+- IRB approval: <<TODO: protocol number, date>>
+- Data use agreement: see `compliance/dua_<dataset>_<date>.md` (template at
+  `templates/compliance/dua_TEMPLATE.md`)
+- PHI: must not leave the project's `data/` directory per the
+  epi-cwd rule snippet under `tools/bootstrap_templates/agents_md_snippets/epi.md`.
+
+## 16. Reproducibility
+
+- ReproLog: `logs/reproducibility/repro_log_*.json` per
+  [skills/emit-repro-log/SKILL.md](../../skills/emit-repro-log/SKILL.md)
+- Dataset manifest: `data/_manifest.json`
+- Commit trailers: `/commit-with-provenance --role=<role>`

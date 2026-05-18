@@ -1,0 +1,55 @@
+# <<NAME>> — Project-Local Rules
+
+Inherits all user-global rules from `~/.codex/AGENTS.md` plus the imported
+cwd-scoped rule snippet under `tools/bootstrap_templates/agents_md_snippets/`
+(activated automatically when this project's path matches the rule's cwd
+globs).
+
+## Scope
+
+<<SCOPE_DESCRIPTION>>
+
+## Reproducibility contract
+
+Every artifact-producing run in this project emits a 13-field ReproLog at
+`logs/reproducibility/repro_log_{run_id}.json` per the
+[emit-repro-log](../../skills/emit-repro-log/SKILL.md) skill. All commits
+use [/commit-with-provenance](../../skills/commit-with-provenance/SKILL.md)
+with `--role={idea|code|prose|audit|multi}` per ICMJE 2026 disclosure.
+
+Dataset provenance: `data/_manifest.json` (managed by
+`tools/build_data_manifest.py`). Run `--check` mode in CI to detect drift.
+
+## Quickstart
+
+```bash
+uv venv && uv sync
+uv run pre-commit install
+uv run pytest
+```
+
+## Project state
+
+- **Kind:** <<KIND>>
+- **Bootstrap date:** <<DATE>>
+- **Python version pin:** `<<PYTHON_VERSION>>`
+- **Bootstrap script HEAD:** `<<BOOTSTRAP_SCRIPT_HEAD>>` (see `manifest.json`)
+
+## Directory layout
+
+See `manifest.json` for the canonical subdir list. Key conventions:
+
+- `data/{raw,interim,processed,external}/` — read-only raw → analysis-ready
+  pipeline; per-file SHA in `data/_manifest.json`.
+- `docs/{audits,decisions,literature,methodology,reports,research_notes,templates}/`
+  — durable documentation.
+- `artifacts/{models,runs}/` — versioned binary outputs.
+- `logs/reproducibility/` — ReproLog records + pip-freeze archive.
+- `research/`, `reports/` — work-in-progress and final reports.
+- `runs/` — top-level run outputs; coexists with `artifacts/runs/`.
+
+## Identity hygiene
+
+This project's local git config sets `user.email` per the bootstrap. Real-name
+or other identifying metadata must never appear in committed files unless
+explicitly intended.

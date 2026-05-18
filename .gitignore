@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Audit and run logs (local only; do not ship)
+logs/
+audit_trail_*.md
+audit_round_*.md
+
+# Secrets and local overrides
+.env
+.env.local
+*.local.json
+*.local.toml
+*.local.txt
+settings.local.json
+config.local.toml
+tools/check_identity_tokens.local.txt
+
+# Build artifacts
+dist/
+build/

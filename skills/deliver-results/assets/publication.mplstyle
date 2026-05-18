@@ -1,0 +1,101 @@
+## Publication + slide-grade matplotlib style.
+## Every value cites a primary source - no magic numbers.
+## See ../SKILL.md "Style parameters" section for the full citation table.
+## Load via: plt.style.use("<bootstrap_path>/skills/deliver-results/assets/publication.mplstyle")
+
+# --- Fonts ---------------------------------------------------------
+# DejaVu Sans is matplotlib's default since v2.0 (2017-01-17 release notes).
+# Liberation Sans is Red Hat's metric-compatible Arial substitute.
+# Arial/Helvetica preferred by Nature artwork guide.
+font.family       : sans-serif
+font.sans-serif   : DejaVu Sans, Liberation Sans, Arial, Helvetica
+## Point-size ladder: Nature artwork guide minimum readable type is >=5 pt
+## at FINAL printed size; 7-9 pt is the typical range. We ship 8-9 pt body
+## assuming <=15% reduction at print. axes.titlesize one notch up for
+## hierarchical emphasis; figure.titlesize matches journal panel-suptitle norm.
+font.size         : 9.0
+axes.titlesize    : 10
+axes.labelsize    : 9
+xtick.labelsize   : 8
+ytick.labelsize   : 8
+legend.fontsize   : 8
+figure.titlesize  : 11
+
+# --- Figure --------------------------------------------------------
+# Default: Nature single-column = 89 mm = 3.50" wide.
+# Override via save_figure(target=...) for two_col / ppt_* / print_600.
+figure.figsize    : 3.5, 2.7
+figure.dpi        : 100
+figure.constrained_layout.use : True
+
+# --- Save ----------------------------------------------------------
+# 300 dpi = Nature photograph/halftone minimum. Line art and combination
+# figures should use 600 dpi via target=print_600.
+savefig.dpi       : 300
+savefig.bbox      : tight
+savefig.pad_inches: 0.02
+savefig.transparent : False
+savefig.format    : png
+
+# --- Backend / font embedding --------------------------------------
+# fonttype=42 yields TrueType embedding in PDF (Type 42 is PostScript's
+# TrueType wrapper). Editable in Illustrator; avoids Type-3 bitmap subset.
+pdf.fonttype      : 42
+ps.fonttype       : 42
+# svg.fonttype=none keeps text as text (selectable/editable), not paths.
+svg.fonttype      : none
+text.usetex       : False
+mathtext.default  : regular
+
+# --- Axes (Tufte data-ink minimization) ----------------------------
+## Geometric weights below (axes.linewidth, ticks, lines, legend padding,
+## errorbar caps) follow Tufte (2001) VDQI data-ink-ratio guidance: spine
+## and tick lines should be the thinnest readable weight (0.5-1.0 pt typical
+## journal range; Nature line-weight recommendation), with data linewidth
+## bumped to maintain visual hierarchy (lines.linewidth > axes.linewidth).
+axes.grid         : False
+axes.spines.top   : False
+axes.spines.right : False
+axes.spines.left  : True
+axes.spines.bottom: True
+axes.linewidth    : 0.8
+axes.titlepad     : 4.0
+axes.labelpad     : 3.0
+# Okabe-Ito 8-color colorblind-safe palette (Wong 2011, Nat Methods 8:441).
+# Distinct from matplotlib's `tab10` (which is D3 Tableau-10).
+axes.prop_cycle   : cycler('color', ['000000','E69F00','56B4E9','009E73','F0E442','0072B2','D55E00','CC79A7'])
+axes.formatter.use_mathtext : True
+
+# --- Ticks ---------------------------------------------------------
+# Tufte VDQI Chapter 3: in-pointing ticks minimize non-data ink.
+xtick.direction   : in
+ytick.direction   : in
+xtick.major.size  : 3.5
+ytick.major.size  : 3.5
+xtick.minor.size  : 2.0
+ytick.minor.size  : 2.0
+xtick.major.width : 0.7
+ytick.major.width : 0.7
+
+# --- Lines / markers -----------------------------------------------
+lines.linewidth     : 1.2
+lines.markersize    : 4
+lines.markeredgewidth : 0.6
+
+# --- Legend (Tufte) -------------------------------------------------
+legend.frameon       : False
+legend.borderpad     : 0.3
+legend.labelspacing  : 0.3
+legend.handletextpad : 0.4
+
+# --- Colormaps -----------------------------------------------------
+# viridis: perceptually uniform, colorblind-safe (van der Walt & Smith 2015
+# SciPy; Kovesi 2015 arXiv:1509.03700 peer-style derivation). Crameri 2020
+# Nat Commun 11:5444 lists viridis among acceptable widely-available
+# alternatives while primarily advocating Scientific colour maps (batlow).
+image.cmap        : viridis
+image.aspect      : auto
+image.interpolation : nearest
+
+# --- Errorbar ------------------------------------------------------
+errorbar.capsize  : 2.0

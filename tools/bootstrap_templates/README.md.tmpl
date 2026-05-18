@@ -1,0 +1,104 @@
+# <<NAME>>
+
+<<DESCRIPTION>>
+
+## Status
+
+| Field | Value |
+|---|---|
+| Kind | `<<KIND>>` |
+| Python | `<<PYTHON_VERSION>>` |
+| License | `<<LICENSE>>` |
+| Bootstrap date | `<<DATE>>` |
+| Bootstrap HEAD | `<<BOOTSTRAP_SCRIPT_HEAD>>` |
+
+## Layout
+
+```
+<<NAME>>/
+├── src/                  # source-layout package
+├── tests/                # pytest suite
+├── scripts/              # one-shot entrypoints
+├── notebooks/            # exploratory (stripped via nbstripout)
+├── data/
+│   ├── raw/              # read-only vendor pulls (gitignored)
+│   ├── interim/          # lossy transforms (gitignored)
+│   ├── processed/        # analysis-ready (gitignored)
+│   └── external/         # reference data
+├── docs/
+│   ├── audits/           # audit-remediate-loop trails
+│   ├── decisions/        # ADRs (Nygard/MADR)
+│   ├── literature/       # primary-source PDFs + notes
+│   ├── methodology/      # method memos, derivations
+│   ├── reports/          # stakeholder-facing reports
+│   ├── research_notes/   # dated memos
+│   └── templates/        # reusable doc templates
+├── artifacts/
+│   ├── models/           # versioned model binaries
+│   └── runs/             # run aggregate outputs
+├── runs/                 # top-level run outputs
+├── research/             # hypothesis-register / analysis-stage subdirs
+├── reports/              # rendered reports
+├── config/               # validated configs (pydantic / yaml)
+├── logs/
+│   └── reproducibility/  # ReproLog records + pip-freeze archive
+├── outputs/              # scratch outputs (NOT artifacts)
+├── AGENTS.md             # project-local Codex rules
+├── CHANGELOG.md          # Keep-a-Changelog 1.1.0
+├── CITATION.cff          # CFF v1.2.0
+├── LICENSE
+├── pyproject.toml        # PEP 621
+├── .gitignore
+├── .pre-commit-config.yaml
+└── manifest.json         # bootstrap reproducibility anchor
+```
+
+## Setup
+
+```bash
+# Create venv from project pyproject.toml
+uv venv && uv sync
+
+# Install pre-commit hooks (seed-guard, citation-cff)
+uv run pre-commit install
+
+# Run tests
+uv run pytest
+
+# Check data manifest integrity
+python tools/build_data_manifest.py --check
+```
+
+## Reproducibility
+
+This project follows the 13-field ReproLog contract documented at
+`skills/emit-repro-log/SKILL.md`. Every artifact-producing run records:
+
+- git HEAD
+- pip freeze SHA-256 (full 64-hex, archived under `logs/reproducibility/env/`)
+- dataset checksums from `data/_manifest.json`
+- RNG seed
+- model commit hash
+
+Commits use `/commit-with-provenance --role=<role>` which emits
+`Repro-Log-Path:` and `Repro-Log-SHA256:` trailers per ICMJE 2026 AI-assistance
+disclosure.
+
+## Citation
+
+See [CITATION.cff](CITATION.cff) (CFF v1.2.0) for machine-readable citation
+metadata. To add a reference to the bibliography:
+
+```bash
+# Via /cite-add slash command (resolves via CrossRef MCP)
+/cite-add 10.1093/jamiaopen/ooy012
+```
+
+## Architecture decisions
+
+See [docs/decisions/](docs/decisions/) for ADR records (Nygard/MADR format).
+New decisions via `/adr-new "<title>"`.
+
+## License
+
+See [LICENSE](LICENSE).

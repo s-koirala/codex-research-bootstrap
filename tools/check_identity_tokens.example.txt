@@ -1,0 +1,46 @@
+# Example token file for check_identity.py.
+#
+# Copy this file to `check_identity_tokens.local.txt` (gitignored) and
+# replace the placeholder values below with your own identity tokens. The
+# scanner loads ONLY the .local.txt copy at runtime; this .example.txt is
+# scanned only as documentation and is intentionally skipped by the scanner.
+#
+# Format:
+#   - One token per line.
+#   - Lines beginning with `#` are comments.
+#   - A `# === <category-label> ===` line sets the category for subsequent
+#     tokens. Choose any short identifier; the label is echoed in scan
+#     output so leaks can be triaged by class.
+#   - Substring matching is case-insensitive. Use the shortest unambiguous
+#     fragment that identifies you (e.g., a pseudonym stem rather than the
+#     full pseudonym).
+#
+# Guidance: keep entries short. A four-character pseudonym stem will catch
+# every variant; the literal full handle is redundant. Avoid tokens shorter
+# than four characters (they generate false positives in URLs and code).
+
+# === pseudonym ===
+# Stems and full forms of any pseudonym, real name, or handle you write
+# under but want excluded from committed artifacts.
+example-pseudonym
+your-github-handle
+your-real-name
+
+# === project-name ===
+# Tokens that name maintainer-specific projects whose presence in this
+# repository would tie it back to a single contributor. Use the canonical
+# spelling plus common variants (underscore vs hyphen, etc.).
+example-project-name
+another-private-project
+
+# === workstation ===
+# Hostnames, machine names, or domain fragments that identify a specific
+# device or organization. Generic OS-home-path shapes are caught by the
+# script's Tier 1 patterns already; list only tokens that are uniquely
+# yours (e.g., a custom hostname like `lab-workstation-01`).
+example-workstation-hostname
+
+# === institution ===
+# Affiliations beyond those required for external citations. Listing the
+# institution short-name here keeps it out of committed artifacts.
+example-institution-shortname

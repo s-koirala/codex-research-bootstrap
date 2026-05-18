@@ -1,0 +1,84 @@
+# =====================================================================
+# Sensitive (must never commit)
+# =====================================================================
+.env
+.env.*
+*.token
+*.secret
+*.pem
+*.key
+credentials.json
+.credentials.json
+
+# =====================================================================
+# Python build / cache
+# =====================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# =====================================================================
+# Virtual environments
+# =====================================================================
+.venv/
+venv/
+
+# =====================================================================
+# Data (gitignored by default; un-ignore specific subdirs as needed)
+# =====================================================================
+data/raw/
+data/interim/
+data/processed/
+data/external/
+!data/_manifest.json
+!data/expectations.yaml
+!data/processed/_provenance/
+!**/.gitkeep
+
+# =====================================================================
+# Artifacts and runs (gitignored; track via DVC or git-lfs if needed)
+# =====================================================================
+artifacts/
+runs/
+outputs/
+
+# =====================================================================
+# Logs (ReproLogs are tracked manually only when referenced by a commit)
+# =====================================================================
+logs/
+!logs/reproducibility/.gitkeep
+!logs/reproducibility/env/.gitkeep
+
+# =====================================================================
+# Notebooks (stripped via nbstripout)
+# =====================================================================
+.ipynb_checkpoints/
+
+# =====================================================================
+# OS / editor
+# =====================================================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# =====================================================================
+# Build/release
+# =====================================================================
+*.tar.gz
+*.whl
+
+# =====================================================================
+# Allow-list (these match patterns above but ARE tracked)
+# =====================================================================
+!CITATION.cff
+!manifest.json

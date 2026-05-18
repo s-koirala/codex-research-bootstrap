@@ -1,0 +1,162 @@
+# codex-research-bootstrap project-scope Codex CLI configuration.
+#
+# When Codex CLI is invoked inside this repository, it discovers this file at
+# .codex/config.toml (project-scope, honored only when the project is
+# explicitly trusted) and merges it with $CODEX_HOME/config.toml (user-scope,
+# default ~/.codex/config.toml). The installer (tools/install.py) copies this
+# file to $CODEX_HOME/config.toml when run with --scope user.
+#
+# Companion file: .codex/hooks.json wires event-to-script mappings (the Codex
+# hooks contract is JSON, not TOML). The two files are kept separate so that
+# editing one does not risk re-parsing the other.
+#
+# Dependency posture (decided 2026-05-18, recorded in
+# docs/decisions/0001-repo-scope-and-naming.md and README.md "Requirements"):
+#
+#   Required:                git, OpenAI Codex CLI, Python >= 3.10.
+#   Detected-recommended:    uv (for MCP server resolution; see [mcp_servers]).
+#   Detected-optional:       pandoc (render-manuscript), ruff (lint),
+#                            nbstripout (notebook hygiene).
+#
+# Sources:
+# - https://developers.openai.com/codex/config-reference
+# - https://developers.openai.com/codex/config-advanced
+# - https://developers.openai.com/codex/subagents
+# - https://developers.openai.com/codex/mcp
+
+# ---------------------------------------------------------------------------
+# Model + reasoning defaults
+# ---------------------------------------------------------------------------
+# Left unset so Codex applies its own default and the consumer pins per-repo
+# overrides in their own user-scope config. Uncomment to lock the bootstrap to
+# a specific model.
+#
+# model = "gpt-5-codex"
+# model_reasoning_effort = "medium"
+
+# ---------------------------------------------------------------------------
+# AGENTS.md walk caps
+# ---------------------------------------------------------------------------
+# `project_doc_max_bytes` caps the concatenated AGENTS.md chain (root → cwd).
+# Default is 32 KiB (32768 bytes); this repo's top-level AGENTS.md targets
+# 12-15 KiB, leaving headroom for per-subdirectory additions. Uncomment to
+# raise the cap when downstream projects layer multiple per-folder AGENTS.md.
+#
+# project_doc_max_bytes = 32768
+
+# `project_doc_fallback_filenames` lists extra files Codex will treat as
+# AGENTS.md at each directory level. Empty by default; uncomment to alias.
+#
+# project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]
+
+# ---------------------------------------------------------------------------
+# Permissions: allow / deny / ask Bash patterns
+# ---------------------------------------------------------------------------
+# Ported from the source-layer settings.json permission lists. The Codex
+# permissions schema differs across releases; refer to
+# https://developers.openai.com/codex/agent-approvals-security for the
+# canonical TOML keys. The lists below capture the intent — adapt the keys to
+# the local Codex version when the installer copies this file. Consumers may
+# extend (never weaken) the deny list per-project.
+[permissions]
+# Allowed without prompt: routine read-only and well-understood mutating tools.
+allow = [
+  "Bash(gh:*)",
+  "Bash(git:*)",
+  "Bash(python:*)",
+  "Bash(py:*)",
+  "Bash(uv:*)",
+  "Bash(ruff:*)",
+  "Bash(pytest:*)",
+  "Bash(nbqa:*)",
+  "Bash(nbstripout:*)",
+  "Bash(ls:*)",
+  "Bash(pwd)",
+  "Bash(cat:*)",
+  "Bash(head:*)",
+  "Bash(tail:*)",
+  "Bash(grep:*)",
+  "Bash(rg:*)",
+  "Bash(jq:*)",
+]
+
+# Denied outright: irreversible or destructive shell operations.
+deny = [
+  "Bash(rm -rf:*)",
+  "Bash(git push --force:*)",
+  "Bash(git reset --hard:*)",
+]
+
+# Ask first: network egress that touches outside resources.
+ask = [
+  "Bash(curl:*)",
+  "Bash(wget:*)",
+]
+
+# ---------------------------------------------------------------------------
+# Subagent spawning caps
+# ---------------------------------------------------------------------------
+# Both values match the audit-remediate-loop topology (see
+# skills/audit-remediate-loop/SKILL.md and AGENTS.md "Audit-remediate-loop").
+[agents]
+# Justification: six = the six auditor branches (quant XOR epi + literature-
+# check + reproducibility-verifier + code-reviewer + format-auditor) that
+# spawn concurrently within audit-remediate-loop Round N. Quant and epi are
+# mutually exclusive at the calculations branch, so at most six run together;
+# `max_threads = 6` is the tightest bound that does not throttle Round N.
+max_threads = 6
+
+# Justification: audit-remediate-loop runs at depth 1 — the root agent spawns
+# five auditors concurrently and waits for their findings before remediating.
+# Deeper recursion would compound run-time without coverage gain
+# (multi-agent self-consistency gains taper at moderate sample counts per
+# https://arxiv.org/abs/2511.00751).
+max_depth = 1
+
+# ---------------------------------------------------------------------------
+# MCP servers
+# ---------------------------------------------------------------------------
+# Two ship by default: arxiv (literature retrieval for literature-check) and
+# crossref (DOI metadata for cite-add). Both use the `uv tool run` invocation
+# pattern so the consumer does not have to pre-install the Python packages —
+# uv resolves and caches each server on first invocation.
+
+[mcp_servers.arxiv]
+# arXiv MCP server. Search papers, download metadata, build citation graphs.
+# Source: https://github.com/blazickjp/arxiv-mcp-server
+# Verified accessible 2026-05-18.
+# Consumed by: .codex/agents/literature-check.toml.
+command = "uv"
+args = [
+  "tool",
+  "run",
+  "arxiv-mcp-server",
+  "--storage-path",
+  "${ARXIV_STORAGE_PATH:-${HOME}/.cache/arxiv-mcp/papers}",
+]
+
+[mcp_servers.arxiv.env]
+MAX_RESULTS = "50"
+REQUEST_TIMEOUT = "60"
+
+[mcp_servers.crossref]
+# CrossRef MCP. DOI -> CSL-JSON / BibTeX / RIS resolution.
+# Source: https://github.com/h-lu/crossref-cite-mcp
+# Verified accessible 2026-05-18.
+# Consumed by: skills/cite-add/SKILL.md.
+command = "uv"
+args = ["tool", "run", "crossref-cite-mcp"]
+
+[mcp_servers.crossref.env]
+# Set CROSSREF_MAILTO to your contact email for CrossRef's polite pool
+# (identified users receive higher rate limits). The bootstrap leaves this
+# unset; consumers populate via shell env at install time, e.g.,
+#   export CROSSREF_MAILTO="you@example.org"
+CROSSREF_MAILTO = "${CROSSREF_MAILTO}"
+
+# ---------------------------------------------------------------------------
+# Hooks
+# ---------------------------------------------------------------------------
+# Event-to-script wiring lives in the sibling file .codex/hooks.json. Keeping
+# the hooks block out of this TOML avoids round-trip risk and lets the JSON
+# schema evolve independently of the TOML schema.

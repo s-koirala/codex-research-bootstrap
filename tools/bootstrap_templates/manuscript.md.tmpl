@@ -1,0 +1,86 @@
+# <<NAME>>
+
+<<TODO: subtitle / one-line description>>
+
+**Author:** <<AUTHOR>>
+**Date:** <<DATE>>
+**Version:** 0.0.1
+
+---
+
+## Abstract
+
+<<TODO: 250 words. Background → Methods → Results → Conclusions.>>
+
+## Introduction
+
+<<TODO: motivation; prior work; gap this manuscript addresses; specific
+research question or hypothesis.>>
+
+## Methods
+
+### Data
+<<TODO: sources; provenance via data/_manifest.json; license; snapshot date.>>
+
+### Statistical methods
+<<TODO: model specification; pre-registration anchor (design.md SHA);
+sensitivity analyses including E-value where a causal claim is made
+(VanderWeele & Ding 2017); HAC SE if time-series.>>
+
+### Computational reproducibility
+ReproLog records archived under `logs/reproducibility/`; environment
+captured via `pip_freeze_sha256` per
+[skills/emit-repro-log/SKILL.md](../../skills/emit-repro-log/SKILL.md);
+dataset checksums in `data/_manifest.json` (built by
+`tools/build_data_manifest.py`).
+
+## Results
+
+<<TODO: figures embedded via the deliver-results figure-export pipeline
+(save_figure with target=single_col, 300 dpi); tables via great_tables;
+report-card numerics from skills/deliver-results/.>>
+
+### Figure 1
+<<TODO: caption>>
+
+### Table 1
+<<TODO: baseline characteristics via tableone (epi) or KPI summary (quant)>>
+
+## Discussion
+
+<<TODO: principal findings; comparison with prior work; mechanistic
+interpretation; limitations.>>
+
+### Limitations
+
+<<TODO: bias sources; generalizability bounds; sample-size constraints.>>
+
+## Conclusions
+
+<<TODO: one-paragraph synthesis. State implications and explicit
+out-of-scope items.>>
+
+## AI-assistance statement
+
+See [docs/ai_assistance_statement.md](docs/ai_assistance_statement.md). Per
+[ICMJE Recommendations (updated January 2026)](https://www.icmje.org/recommendations/):
+AI tools are not authors. Models used and their roles are listed in the
+linked statement.
+
+## Data and code availability
+
+- **Data:** `data/_manifest.json` lists per-file SHA-256 + source URI +
+  license + snapshot date. Raw data may be unavailable due to data-use-
+  agreement constraints; derived statistics and code remain available.
+- **Code:** [https://github.com/<<GITHUB_HANDLE>>/<<NAME>>](https://github.com/<<GITHUB_HANDLE>>/<<NAME>>)
+  at commit `<<BOOTSTRAP_SCRIPT_HEAD>>`.
+- **Archive:** <<ZENODO_DOI>> (minted on release).
+
+## Funding and conflicts of interest
+
+<<TODO>>
+
+## References
+
+See [CITATION.cff](CITATION.cff) `references:` list. Auto-populated via
+`/cite-add <DOI>` (routes through CrossRef MCP).

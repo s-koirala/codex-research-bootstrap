@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/<bootstrap-owner>/codex-research-bootstrap/skills/emit-repro-log/repro_log_schema.json",
+  "title": "ReproLog",
+  "description": "Reproducibility record emitted before any run that writes to artifacts/ or logs/. Composed of 13 core fields plus a 4-field 'runtime' sub-object (2026-05-18 runtime-stack augmentation).",
+  "$comment": "Core 13-field contract: run_id, phase, hypothesis_id, timestamp_utc, git_head, pip_freeze_sha256, pip_freeze_path, dataset_checksums, rng_seed, model_hash, config_resolved_sha256, host, env_id. The 'runtime' sub-object (python_version, platform, container_digest, os_release) was added 2026-05-18 to capture interpreter/OS/container detail beyond what 'host' carries; rationale per Boettiger (2015), 'An introduction to Docker for reproducible research,' ACM SIGOPS Oper. Syst. Rev. 49(1):71-79, doi:10.1145/2723872.2723882.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "phase",
+    "hypothesis_id",
+    "timestamp_utc",
+    "git_head",
+    "pip_freeze_sha256",
+    "pip_freeze_path",
+    "dataset_checksums",
+    "rng_seed",
+    "model_hash",
+    "config_resolved_sha256",
+    "host",
+    "env_id",
+    "runtime"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ULID (preferred, lexical-sort) or uuid4 hex"
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Suggested values: bootstrap, backtest, inference, validation, deliver. Not enum-constrained for forward compatibility."
+    },
+    "hypothesis_id": {
+      "type": "string",
+      "description": "HID (e.g. H055) or 'n/a' for non-hypothesis-bound work"
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 with microsecond precision; UTC"
+    },
+    "git_head": {
+      "type": "string",
+      "description": "40-hex SHA of HEAD, or 'unknown' if outside a git repo",
+      "pattern": "^([0-9a-f]{40}|unknown)$"
+    },
+    "pip_freeze_sha256": {
+      "type": "string",
+      "description": "Full 64-hex SHA-256 of pip-freeze stdout. NOT a truncated cache digest.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "pip_freeze_path": {
+      "type": "string",
+      "description": "Project-relative POSIX path to the captured freeze text"
+    },
+    "dataset_checksums": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+      "description": "Per-dataset-file SHA-256 from data/_manifest.json"
+    },
+    "rng_seed": {
+      "type": "integer",
+      "description": "Explicit seed used; 0 if no sampling"
+    },
+    "model_hash": {
+      "type": ["string", "null"],
+      "description": "Model commit / weight SHA when applicable"
+    },
+    "config_resolved_sha256": {
+      "type": ["string", "null"],
+      "description": "SHA-256 of resolved config snapshot (e.g., frozen design.md content). Null when no config attached; 64-hex string when set - empty string is not valid.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "python", "cpu"],
+      "properties": {
+        "os": {"type": "string", "description": "platform.system() + platform.release(), e.g. 'Linux 5.15.0-89-generic'"},
+        "python": {"type": "string", "description": "platform.python_version() output, e.g. '3.12.1' - version only, NOT interpreter path"},
+        "cpu": {"type": "string", "description": "platform.machine() output, e.g. 'AMD64'"}
+      },
+      "description": "Compact host triple. For finer-grained interpreter/OS/container info see the 'runtime' sub-object."
+    },
+    "env_id": {
+      "type": "string",
+      "description": "file_sha256(uv.lock) if present; else 'no-uv-lock'"
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python_version", "platform", "container_digest", "os_release"],
+      "description": "Runtime-stack sub-object added 2026-05-18 for finer-grained execution-environment capture beyond the compact 'host' triple.",
+      "$comment": "Rationale: Boettiger (2015), 'An introduction to Docker for reproducible research,' ACM SIGOPS Oper. Syst. Rev. 49(1):71-79, doi:10.1145/2723872.2723882, argues that recreating a computational result requires not just the source-code version and library list but the operating-system distribution, kernel version, and (when applicable) container image digest. The 'host' field's truncated python_version() output, system()/release() string, and machine() string are insufficient: the same library list under Ubuntu 22.04 vs Alpine 3.19 can produce divergent floating-point results due to glibc vs musl, different BLAS backends, and different threading defaults. The four fields below capture: full interpreter banner (sys.version), the composite platform string (platform.platform()), the container image digest when running inside Docker/Podman/Kubernetes (null otherwise), and the OS-release identifier read from /etc/os-release on Linux or platform.win32_ver()/platform.mac_ver() on Windows/macOS.",
+      "properties": {
+        "python_version": {
+          "type": "string",
+          "description": "sys.version output - full Python interpreter version string including build/compiler info (typically 3+ lines worth concatenated by Python at startup)"
+        },
+        "platform": {
+          "type": "string",
+          "description": "platform.platform() output - single-string composite (system + release + version + machine)"
+        },
+        "container_digest": {
+          "type": ["string", "null"],
+          "description": "Docker/Podman image SHA-256 digest when running inside a container; null when no container is detected or the digest cannot be read. Detection probes /.dockerenv, /run/.containerenv, /proc/self/cgroup, and the KUBERNETES_SERVICE_HOST / DOCKER_CONTAINER env vars."
+        },
+        "os_release": {
+          "type": "string",
+          "description": "OS-release identifier. Linux: PRETTY_NAME from /etc/os-release. Windows: platform.win32_ver() joined with spaces. macOS: platform.mac_ver() joined with spaces. Empty string if no source is readable."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+# Citation File Format v1.2.0 — see https://citation-file-format.github.io/
+# Placeholders use <<KEY>> syntax (not Jinja {{KEY}}) to keep raw YAML parseable
+# during validation. Substitute with `tools/bootstrap_project.py` or by hand.
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: <<TYPE>>  # software | dataset | book | article — pick one
+title: "<<TITLE>>"
+abstract: "<<ABSTRACT>>"
+
+# Authors. Replace the placeholder with the author entry/entries appropriate
+# to the project (real name, pseudonym, or organization). For pseudonymous
+# projects, list only the pseudonym and include an ORCID only if it is
+# publicly bound to that pseudonym; otherwise omit the orcid line.
+authors:
+  - name: <<AUTHOR>>
+    # orcid: https://orcid.org/<<ORCID>>  # uncomment if applicable
+
+# Versioning per Semantic Versioning 2.0.0 (https://semver.org/).
+# date-released is the ISO 8601 calendar date of the corresponding git tag.
+version: "<<VERSION>>"
+date-released: "<<DATE>>"
+url: "<<URL>>"
+repository-code: "<<REPO_URL>>"
+license: <<LICENSE_SPDX>>  # SPDX identifier, e.g. MIT, Apache-2.0, CC-BY-4.0
+
+keywords:
+  - <<KEYWORD1>>
+  - <<KEYWORD2>>
+
+# Concept DOI from the project's archival venue (e.g., Zenodo). Leave the
+# placeholder until first release.
+doi: <<DOI>>
+
+# Optional: preferred citation if the work has a canonical published form
+# (manuscript, paper). Comment out the block if not applicable.
+preferred-citation:
+  type: <<CITE_TYPE>>  # article | conference-paper | thesis | etc.
+  authors:
+    - name: <<AUTHOR>>
+  title: "<<CITE_TITLE>>"
+  year: <<CITE_YEAR>>
+  journal: "<<CITE_JOURNAL>>"
+  doi: <<CITE_DOI>>
+
+# References — auto-populated by the cite-add skill; each entry must conform
+# to CFF v1.2.0 reference schema. Start empty.
+references: []

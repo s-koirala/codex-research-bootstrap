@@ -1,0 +1,37 @@
+// Causal DAG in dagitty syntax — see Textor et al. 2016 IJE 45(6):1887.
+// To render: paste into https://www.dagitty.net/dags.html  OR  use `dagitty` R package.
+// To compute adjustment set: dagitty.adjustmentSets(g, exposure, outcome).
+
+dag {
+  // Nodes — declare exposure and outcome first with attributes
+  exposure_node [exposure]
+  outcome_node [outcome]
+
+  // Confounders (common causes of exposure and outcome)
+  // confounder_1 [adjusted]   // mark as "adjusted" if part of the final adjustment set
+  // confounder_2
+
+  // Mediators (caused by exposure, cause outcome; do NOT adjust unless decomposing total effect)
+  // mediator_1
+
+  // Effect modifiers (interact with exposure but not on the causal path)
+  // modifier_1
+
+  // Colliders (common effect; DO NOT adjust — would induce selection bias)
+  // collider_1
+
+  // Edges — direction is causal: A -> B means "A causes B"
+  exposure_node -> outcome_node
+
+  // Add confounder edges, e.g.:
+  // confounder_1 -> exposure_node
+  // confounder_1 -> outcome_node
+
+  // Mediator paths:
+  // exposure_node -> mediator_1 -> outcome_node
+}
+
+// After drafting, verify with dag-drafter agent which computes:
+//   - Minimal back-door adjustment set (Pearl 2009 §3.3)
+//   - Testable implications (conditional independencies)
+//   - Sensitivity to unmeasured confounding (E-value per VanderWeele & Ding 2017)

@@ -1,0 +1,29 @@
+# Pre-commit configuration for the codex-research-bootstrap repository.
+#
+# The identity-hygiene gate is mandatory: every commit is grepped for
+# forbidden identity tokens (categories described in tools/check_identity.py;
+# concrete tokens live in tools/check_identity_tokens.local.txt, which is
+# gitignored). Install via `pre-commit install` after cloning.
+
+repos:
+  - repo: local
+    hooks:
+      - id: check-identity
+        name: identity-hygiene gate
+        entry: python tools/check_identity.py --staged
+        language: system
+        types: [text]
+        always_run: true
+        pass_filenames: false
+        stages: [pre-commit]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]

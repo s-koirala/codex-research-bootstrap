@@ -1,0 +1,41 @@
+# Hypothesis backlog
+
+Append-only register of research hypotheses for this project. New entries are
+added via [/hypothesis-new](../../skills/hypothesis-new/SKILL.md). Append-only:
+archived hypotheses retain their row with `status: archived`.
+
+## Status legend
+
+| Status | Meaning |
+|---|---|
+| `designed` | Pre-registration frozen via /preregister; design.md SHA recorded |
+| `validated` | validate-data PASS on input dataset |
+| `powered` | power-analysis run; n meets registered effect-of-interest |
+| `running` | walk-forward / fit in progress |
+| `kpi-reported` | KPI report card emitted to reports/{HID}/ |
+| `promoted` | passed multipletest-gate; deployed to production |
+| `archived` | null result kept (no deletion per non-loss policy); see failure_log.md |
+
+## Backlog
+
+| HID | Tier | Title | Status | Mechanism citation | Notes |
+|---|---|---|---|---|---|
+<<HYPOTHESIS_ROWS>>
+
+## Tiers
+
+- **Tier 1:** Mechanism well-cited in peer-reviewed lit; high prior probability.
+- **Tier 2:** Mechanism plausible from theory; weaker empirical support.
+- **Tier 3:** Exploratory; structural hypothesis testing the substrate.
+- **Tier 4:** Methodology/gate hypotheses (e.g., multiple-testing family scope).
+- **Tier 5:** Replication / reanalysis of prior work.
+
+## Reserved ID blocks
+
+To avoid HID collision across parallel exploration:
+
+| Block | Range | Reserved for |
+|---|---|---|
+| Main | H001–H099 | core hypotheses |
+| Reanalysis | H100–H199 | replication of prior work |
+| Methodology | H900–H999 | gate / framework hypotheses |

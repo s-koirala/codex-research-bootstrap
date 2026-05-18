@@ -1,0 +1,61 @@
+[project]
+name = "<<NAME>>"
+version = "0.0.1"
+description = "<<DESCRIPTION>>"
+requires-python = "<<PYTHON_VERSION>>"
+authors = [{name = "<<AUTHOR>>"}]
+license = {text = "<<LICENSE>>"}
+readme = "README.md"
+
+[project.optional-dependencies]
+# Justify: ruff/pytest/pre-commit are the bootstrap's tooling defaults.
+# nbstripout + nbqa for notebooks.
+dev = [
+    "ruff",
+    "pytest",
+    "pre-commit",
+    "nbstripout",
+    "nbqa",
+    "pyyaml",          # for precommit_citation_cff.py
+    "jsonschema>=4.18", # Draft 2020-12 support; data_manifest_schema.json needs Draft 2020-12
+]
+
+# Justify: pandera for schema validation (validate-data SKILL.md Section 2);
+# pandas/numpy/scipy are the foundational data stack.
+data = [
+    "pandas",
+    "numpy",
+    "scipy",
+    "pandera",
+    "pyarrow",          # parquet
+]
+
+# Justify: matplotlib/seaborn for figures; defaults set by the deliver-results
+# skill's bundled matplotlib stylesheet.
+viz = [
+    "matplotlib",
+    "seaborn",
+    "great_tables",     # publication tables
+]
+
+[build-system]
+# Default = no build-system declaration; uncomment to make installable:
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100  # justify: bootstrap default; matches common research-code convention
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+# Justify: E/F/W from pycodestyle/pyflakes; I from isort; N for naming;
+# B from bugbear; UP for pyupgrade; SIM for simplification; PL for pylint
+# (with PLR0913 disabled — too many args is sometimes unavoidable in
+# research code where signatures grow naturally).
+select = ["E", "F", "W", "I", "N", "B", "UP", "SIM", "PL"]
+ignore = ["PLR0913"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]

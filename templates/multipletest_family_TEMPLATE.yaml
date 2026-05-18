@@ -1,0 +1,33 @@
+# Multiple-testing family register
+# Per skills/multipletest-gate/SKILL.md and the quant-cwd rule snippet.
+# Append-only. Each new hypothesis run within the family gets a row.
+
+family_id: <<FAMILY_ID>>  # unique identifier, e.g. main_strategy_universe or arrythmia_study
+created: <<DATE>>  # ISO 8601 calendar date
+description: <<DESCRIPTION>>  # 1-2 sentence scope of this family
+
+# Correction method — pre-registered. Choose one. Do not modify post-hoc.
+# Valid values: hansen_spa | white_rc | bh_fdr | holm
+correction_method: <<CORRECTION_METHOD>>  # justify: pre-registered per design.md §8
+
+# Family-wise alpha — pre-registered. Do not modify post-hoc.
+# Typical value: 0.05
+alpha_FWE: <<ALPHA_FWE>>  # justify: pre-registered per design.md §8; if deviating, cite rationale
+
+# Bootstrap resample count for SPA / White Reality Check.
+# 1000 = community-canonical bootstrap-replicate count (Davison & Hinkley 1997 §2.5.1;
+# Efron & Tibshirani 1993 §19). Hansen 2005 / White 2000 do not prescribe a specific B;
+# override for higher Monte-Carlo precision.
+n_boot: 1000  # justify: Davison-Hinkley 1997 §2.5.1 / Efron-Tibshirani 1993 §19 convention
+
+# Hypothesis register — append-only.
+hypotheses: []
+  # - hid: H001
+  #   title: <<title>>
+  #   raw_p: <<p-value>>
+  #   corrected_p: <<after gate>>
+  #   sample_size: <<n>>
+  #   test_statistic: <<which method this row tested via>>
+  #   registered_at: <<ISO 8601 datetime>>
+  #   status: <pending | passed | rejected | archived>
+  #   notes: <<free-text>>

@@ -1,0 +1,35 @@
+# codex-research-bootstrap — minimal project metadata.
+#
+# The repo ships installer + tooling under tools/ (stdlib-only). No runtime
+# dependencies; pyproject exists so that linters and editors can locate the
+# tools/ directory as a package root and so consumers can pin the bootstrap
+# version via the CITATION.cff.
+
+[project]
+name = "codex-research-bootstrap"
+version = "0.0.1"
+description = "OpenAI Codex CLI bootstrap layer for research workflows (statistics, population science, public health, manuscript drafting)."
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "codex-research-bootstrap maintainers" }]
+keywords = ["codex", "research", "reproducibility", "audit-remediate-loop", "statistics", "epidemiology"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Documentation = "./docs/"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
